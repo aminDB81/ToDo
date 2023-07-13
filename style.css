@@ -64,7 +64,10 @@ p {
 
 ul {
   text-align: left;
-  margin-top: 20px;
+  margin-top: 40px;
+}
+.listItems{
+  text-align: center;
 }
 
 li {
@@ -84,14 +87,23 @@ li {
   -o-transition: all 0.5 ease;
   font-family: 'Yekan';
   height: 24px;
+  width: 85%;
+  
 }
 
 li:hover {
   background: #76cfe0;
 }
+.Exception {
+  margin: 0;
+}
 i {
   font-size: 15px;
   margin-right: 10px;
+  transition: 0.3s all;
+}
+i:hover {
+  color: #fff;
 }
 
 li > button {
@@ -101,6 +113,8 @@ li > button {
   float: right;
   color: #025f70;
   font-weight: 800;
+  position: absolute;
+  right: 10rem;
 }
 
 input {
@@ -122,3 +136,71 @@ input {
 .delete {
   display: none;
 }
+li {
+  /* Existing styles */
+  display: flex;
+  align-items: center;
+}
+
+.task-div {
+  /* Additional styles */
+  width: 20px;
+  margin-right: 10px;
+}
+
+.task-checkbox {
+  /* Additional styles */
+  width: 100%;
+}
+
+li span {
+  /* Existing styles */
+  flex-grow: 1;
+  margin-top: 4px;
+}
+
+
+/* Custom Checkbox Styles */
+.task-checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #ccc;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.task-checkbox:checked {
+  border-color: #007bff;
+  background-color: #007bff;
+}
+
+.task-checkbox::before {
+  content: "";
+  width: 4px;
+  height: 13px;
+  border-style: solid;
+  border-color: #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.task-checkbox:checked::before {
+  opacity: 1;
+}
+
+.task-checkbox:focus {
+  box-shadow: 0 0 3px #007bff;
+}
+

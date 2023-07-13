@@ -1,7 +1,6 @@
 var enterButton = document.getElementById("enter");
 var input = document.getElementById("userInput");
 var ul = document.querySelector("ul");
-var item = document.getElementsByTagName("li");
 
 function inputLength() {
   return input.value.length;
@@ -9,15 +8,33 @@ function inputLength() {
 
 function createListElement() {
   var li = document.createElement("li");
-  li.appendChild(document.createTextNode(input.value));
+
+  var taskDiv = document.createElement("div");
+  taskDiv.className = "task-div";
+
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "task-checkbox";
+
+  taskDiv.appendChild(checkbox);
+  li.appendChild(taskDiv);
+
+  var taskText = document.createElement("span");
+  taskText.textContent = input.value;
+  li.appendChild(taskText);
+
   ul.appendChild(li);
   input.value = "";
 
-  function crossOut() {
-    li.classList.toggle("done");
+  checkbox.addEventListener("change", function () {
+    var listItem = this.closest("li");
+    if (this.checked) {
+      listItem.classList.add("done");
+    } else {
+      listItem.classList.remove("done");
+    }
     saveTasks();
-  }
-  li.addEventListener("click", crossOut);
+  });
 
   var dBtn = document.createElement("button");
   var deleteIcon = document.createElement("i");
@@ -28,7 +45,7 @@ function createListElement() {
   dBtn.appendChild(deleteIcon);
   li.appendChild(dBtn);
 
-  dBtn.addEventListener("click", handleButtonClick); // Attach event listener to the button
+  dBtn.addEventListener("click", handleButtonClick);
 
   function handleButtonClick(event) {
     var target = event.target;
@@ -44,13 +61,27 @@ function createListElement() {
   }
 
   function deleteListItem(listItem) {
-    listItem.parentNode.removeChild(listItem); // Remove the list item from the page
+    listItem.parentNode.removeChild(listItem);
     saveTasks();
   }
 
   function editListItem(listItem) {
-    // Handle edit functionality here
-    console.log("Edit clicked");
+    var taskText = listItem.querySelector("span");
+    var editInput = document.createElement("input");
+    editInput.type = "text";
+    editInput.value = taskText.textContent;
+    listItem.replaceChild(editInput, taskText);
+
+    editInput.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        taskText.textContent = editInput.value;
+        if (listItem.contains(editInput)) {
+          listItem.replaceChild(taskText, editInput);
+          saveTasks();
+        }
+      }
+    });
+    editInput.focus();
   }
 
   saveTasks();
@@ -70,13 +101,14 @@ function addListAfterKeypress(event) {
 
 function saveTasks() {
   var tasks = [];
-  for (var i = 0; i < item.length; i++) {
+  var items = document.querySelectorAll("li");
+  items.forEach(function (item) {
     var task = {
-      text: item[i].textContent,
-      done: item[i].classList.contains("done"),
+      text: item.querySelector("span").textContent,
+      done: item.classList.contains("done"),
     };
     tasks.push(task);
-  }
+  });
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
@@ -84,20 +116,39 @@ function retrieveTasks() {
   var savedTasks = localStorage.getItem("tasks");
   if (savedTasks) {
     var tasks = JSON.parse(savedTasks);
-    for (var i = 0; i < tasks.length; i++) {
+    tasks.forEach(function (task) {
       var li = document.createElement("li");
-      li.appendChild(document.createTextNode(tasks[i].text));
-      ul.appendChild(li);
 
-      if (tasks[i].done) {
+      var taskDiv = document.createElement("div");
+      taskDiv.className = "task-div";
+
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "task-checkbox";
+      checkbox.checked = task.done;
+
+      taskDiv.appendChild(checkbox);
+      li.appendChild(taskDiv);
+
+      var taskText = document.createElement("span");
+      taskText.textContent = task.text;
+      li.appendChild(taskText);
+
+      if (task.done) {
         li.classList.add("done");
       }
 
-      function crossOut() {
-        this.classList.toggle("done");
+      ul.appendChild(li);
+
+      checkbox.addEventListener("change", function () {
+        var listItem = this.closest("li");
+        if (this.checked) {
+          listItem.classList.add("done");
+        } else {
+          listItem.classList.remove("done");
+        }
         saveTasks();
-      }
-      li.addEventListener("click", crossOut);
+      });
 
       var dBtn = document.createElement("button");
       var deleteIcon = document.createElement("i");
@@ -108,9 +159,7 @@ function retrieveTasks() {
       dBtn.appendChild(deleteIcon);
       li.appendChild(dBtn);
 
-      dBtn.addEventListener("click", handleButtonClick); // Attach event listener to the button
-
-      function handleButtonClick(event) {
+      dBtn.addEventListener("click", function (event) {
         var target = event.target;
         var listItem = target.closest("li");
         var deleteIcon = listItem.querySelector(".fa-x");
@@ -121,46 +170,32 @@ function retrieveTasks() {
         } else if (target === editIcon) {
           editListItem(listItem);
         }
-      }
+      });
 
       function deleteListItem(listItem) {
-        listItem.parentNode.removeChild(listItem); // Remove the list item from the page
+        listItem.parentNode.removeChild(listItem);
         saveTasks();
       }
 
-function editListItem(listItem) {
-  var taskText = listItem.firstChild;
-  var editInput = document.createElement("input");
-  editInput.type = "text";
-  editInput.value = taskText.textContent;
-  listItem.replaceChild(editInput, taskText);
+      function editListItem(listItem) {
+        var taskText = listItem.querySelector("span");
+        var editInput = document.createElement("input");
+        editInput.type = "text";
+        editInput.value = taskText.textContent;
+        listItem.replaceChild(editInput, taskText);
 
-  editInput.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      taskText.textContent = editInput.value;
-      listItem.replaceChild(taskText, editInput);
-      saveTasks();
-    }
-  });
-
-  // Handle click outside the input to update the task value
-  var isEditing = true; // Flag to track if editing is in progress
-
-  editInput.addEventListener("click", function(event) {
-    event.stopPropagation(); // Prevent click event from propagating to document
-    isEditing = true; // Set editing flag to true
-  });
-
-  document.addEventListener("click", function(event) {
-    if (!isEditing) {
-      taskText.textContent = editInput.value;
-      listItem.replaceChild(taskText, editInput);
-      saveTasks();
-    }
-    isEditing = false; // Reset editing flag to false after click event
-  });
-}
-    }
+        editInput.addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            taskText.textContent = editInput.value;
+            if (listItem.contains(editInput)) {
+              listItem.replaceChild(taskText, editInput);
+              saveTasks();
+            }
+          }
+        });
+        editInput.focus();
+      }
+    });
   }
 }
 
