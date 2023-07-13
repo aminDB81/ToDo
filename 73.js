@@ -20,12 +20,15 @@ function createListElement() {
   li.addEventListener("click", crossOut);
 
   var dBtn = document.createElement("button");
-  dBtn.appendChild(document.createTextNode("X"));
+  var icon = document.createElement("i");
+  icon.classList.add("fa-solid", "fa-x");
+  dBtn.appendChild(icon);
   li.appendChild(dBtn);
-  dBtn.addEventListener("click", deleteListItem);
 
-  function deleteListItem() {
-    li.parentNode.removeChild(li); // Remove the list item from the page
+  dBtn.addEventListener("click", deleteListItem.bind(null, li)); // Pass the list item as an argument
+
+  function deleteListItem(listItem) {
+    listItem.parentNode.removeChild(listItem); // Remove the list item from the page
     saveTasks();
   }
 
@@ -49,7 +52,7 @@ function saveTasks() {
   for (var i = 0; i < item.length; i++) {
     var task = {
       text: item[i].textContent,
-      done: item[i].classList.contains("done")
+      done: item[i].classList.contains("done"),
     };
     tasks.push(task);
   }
@@ -69,6 +72,10 @@ function retrieveTasks() {
         li.classList.add("done");
       }
 
+      if (tasks[i].deleted) {
+        li.classList.add("delete");
+      }
+
       function crossOut() {
         this.classList.toggle("done");
         saveTasks();
@@ -76,8 +83,11 @@ function retrieveTasks() {
       li.addEventListener("click", crossOut);
 
       var dBtn = document.createElement("button");
-      dBtn.appendChild(document.createTextNode("X"));
+      var icon = document.createElement("i");
+      icon.classList.add("fa-solid", "fa-x");
+      dBtn.appendChild(icon);
       li.appendChild(dBtn);
+
       dBtn.addEventListener("click", deleteListItem.bind(null, li)); // Pass the list item as an argument
 
       function deleteListItem(listItem) {
