@@ -83,10 +83,15 @@ li {
   -ms-transition: all 0.5s ease;
   -o-transition: all 0.5 ease;
   font-family: 'Yekan';
+  height: 24px;
 }
 
 li:hover {
   background: #76cfe0;
+}
+i {
+  font-size: 15px;
+  margin-right: 10px;
 }
 
 li > button {
@@ -109,6 +114,9 @@ input {
 .done {
   background: #51df70 !important;
   color: #00891e;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+
 }
 
 .delete {
