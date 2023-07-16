@@ -1,11 +1,10 @@
-// JavaScript code
 var enterButton = document.getElementById("enter");
 var input = document.getElementById("userInput");
 var completedList = document.querySelector(".completed-list");
 var uncompletedList = document.querySelector(".uncompleted-list");
 
 function inputLength() {
-  return input.value.trim().length; // Trim leading/trailing whitespace
+  return input.value.trim().length; 
 }
 
 function createListElement() {

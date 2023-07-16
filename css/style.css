@@ -156,13 +156,12 @@ input {
   display: none;
 }
 li {
-  /* Existing styles */
   display: flex;
   align-items: center;
 }
 
 .task-div {
-  /* Additional styles */
+
   width: 20px;
   margin-right: 10px;
   position: absolute;
@@ -170,17 +169,14 @@ li {
 }
 
 .task-checkbox {
-  /* Additional styles */
   width: 100%;
 }
 
 li span {
-  /* Existing styles */
   flex-grow: 1;
   margin-top: 4px;
 }
 
-/* Custom Checkbox Styles */
 .task-checkbox {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -224,9 +220,7 @@ li span {
 .task-checkbox:focus {
   box-shadow: 0 0 3px #007bff;
 }
-/* Your existing CSS remains the same */
 
-/* Additional styles for the Completed and Uncompleted Tasks divs */
 .completed-tasks, .uncompleted-tasks {
   margin-top: 20px;
   padding: 10px;
