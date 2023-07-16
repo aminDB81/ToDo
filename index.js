@@ -1,13 +1,22 @@
+// JavaScript code
 var enterButton = document.getElementById("enter");
 var input = document.getElementById("userInput");
-var ul = document.querySelector("ul");
+var completedList = document.querySelector(".completed-list");
+var uncompletedList = document.querySelector(".uncompleted-list");
 
 function inputLength() {
-  return input.value.length;
+  return input.value.trim().length; // Trim leading/trailing whitespace
 }
 
 function createListElement() {
+  if (inputLength() === 0) {
+    return; // Don't add empty tasks
+  }
+
   var li = document.createElement("li");
+  var span = document.createElement("span");
+  span.textContent = input.value;
+  li.appendChild(span);
 
   var taskDiv = document.createElement("div");
   taskDiv.className = "task-div";
@@ -19,19 +28,17 @@ function createListElement() {
   taskDiv.appendChild(checkbox);
   li.appendChild(taskDiv);
 
-  var taskText = document.createElement("span");
-  taskText.textContent = input.value;
-  li.appendChild(taskText);
-
-  ul.appendChild(li);
+  uncompletedList.appendChild(li);
   input.value = "";
 
   checkbox.addEventListener("change", function () {
     var listItem = this.closest("li");
     if (this.checked) {
       listItem.classList.add("done");
+      completedList.appendChild(listItem);
     } else {
       listItem.classList.remove("done");
+      uncompletedList.appendChild(listItem);
     }
     saveTasks();
   });
@@ -45,9 +52,7 @@ function createListElement() {
   dBtn.appendChild(deleteIcon);
   li.appendChild(dBtn);
 
-  dBtn.addEventListener("click", handleButtonClick);
-
-  function handleButtonClick(event) {
+  dBtn.addEventListener("click", function (event) {
     var target = event.target;
     var listItem = target.closest("li");
     var deleteIcon = listItem.querySelector(".fa-x");
@@ -58,7 +63,7 @@ function createListElement() {
     } else if (target === editIcon) {
       editListItem(listItem);
     }
-  }
+  });
 
   function deleteListItem(listItem) {
     listItem.parentNode.removeChild(listItem);
@@ -88,13 +93,11 @@ function createListElement() {
 }
 
 function addListAfterClick() {
-  if (inputLength() > 0) {
-    createListElement();
-  }
+  createListElement();
 }
 
 function addListAfterKeypress(event) {
-  if (inputLength() > 0 && event.which === 13) {
+  if (event.key === "Enter") {
     createListElement();
   }
 }
@@ -118,6 +121,9 @@ function retrieveTasks() {
     var tasks = JSON.parse(savedTasks);
     tasks.forEach(function (task) {
       var li = document.createElement("li");
+      var span = document.createElement("span");
+      span.textContent = task.text;
+      li.appendChild(span);
 
       var taskDiv = document.createElement("div");
       taskDiv.className = "task-div";
@@ -130,22 +136,21 @@ function retrieveTasks() {
       taskDiv.appendChild(checkbox);
       li.appendChild(taskDiv);
 
-      var taskText = document.createElement("span");
-      taskText.textContent = task.text;
-      li.appendChild(taskText);
-
       if (task.done) {
         li.classList.add("done");
+        completedList.appendChild(li);
+      } else {
+        uncompletedList.appendChild(li);
       }
-
-      ul.appendChild(li);
 
       checkbox.addEventListener("change", function () {
         var listItem = this.closest("li");
         if (this.checked) {
           listItem.classList.add("done");
+          completedList.appendChild(listItem);
         } else {
           listItem.classList.remove("done");
+          uncompletedList.appendChild(listItem);
         }
         saveTasks();
       });

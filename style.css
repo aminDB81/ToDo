@@ -108,6 +108,7 @@ li {
   font-family: "Yekan";
   height: 24px;
   width: 85%;
+  
 }
 
 li:hover {
@@ -164,6 +165,8 @@ li {
   /* Additional styles */
   width: 20px;
   margin-right: 10px;
+  position: absolute;
+  left: 2rem;
 }
 
 .task-checkbox {
@@ -190,6 +193,7 @@ li span {
   cursor: pointer;
   position: relative;
   transition: border-color 0.3s ease-in-out;
+  
 }
 
 .task-checkbox:checked {
@@ -219,4 +223,18 @@ li span {
 
 .task-checkbox:focus {
   box-shadow: 0 0 3px #007bff;
+}
+/* Your existing CSS remains the same */
+
+/* Additional styles for the Completed and Uncompleted Tasks divs */
+.completed-tasks, .uncompleted-tasks {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #5f27cd;
+  border-radius: 5px;
+}
+
+.completed-tasks h2, .uncompleted-tasks h2 {
+  color: white;
+  margin-bottom: 5px;
 }
